@@ -25,4 +25,4 @@ pip install Flask qrcode[pil]
 ```if you want other devices on the network to access the simulation.```
 
 ## Disclaimer
-This tool is for educational purposes only. It does not capture or transmit any real data.
+you rememebr it is for educational purposes only. It does not capture or transmit any real data🤐😛
