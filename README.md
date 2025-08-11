@@ -1,44 +1,39 @@
-# QR-tool
+# QR Safety Awareness Demo
 
-This project provides a local-only QR code cybersecurity awareness simulation.
+This project educates students about the risks of scanning random QR codes. A scanned QR code opens a page that requires a tap, waits two minutes, then sounds a siren for two minutes while showing safety tips. All actions are logged and visible on a live admin dashboard.
 
 ## Features
-- Flask web app that displays the visitor's IP address, browser user-agent, and timestamp.
-- JavaScript alerts simulate a screenshot capture and request access to the camera.
-- If camera access is denied, an alternate warning alert is shown.
-- No data is stored or transmitted; information is displayed only during the session.
-- `generate_qr.py` creates a QR code (`qr_code.png`) that links to `http://127.0.0.1:5000/`.
+- Delayed alarm with 120 second wait and 120 second siren.
+- Events stored in SQLite and streamed via Socket.IO.
+- Admin dashboard with basic auth, live event table and stats.
+- QR code generator endpoint for easy printing.
 
-## Requirements
-- Python 3
-- Packages: Flask, qrcode[pil]
-
-Install dependencies:
+## Setup
 ```bash
-pip install Flask qrcode[pil]
+npm install
+node server.js
 ```
+The site runs on [http://localhost:3000](http://localhost:3000). Set environment variables `PORT`, `PUBLIC_URL`, `ADMIN_USER`, `ADMIN_PASS`, and `BEHIND_PROXY` as needed.
 
-## Running the Simulation
-1. Generate the QR code:
-   ```bash
-   python generate_qr.py
-   ```
-   This produces `qr_code.png`.
-2. Start the Flask application:
-   ```bash
-   python app.py
-   ```
-   The site is served at `http://127.0.0.1:5000/`.
-3. Scan `qr_code.png` with a mobile device connected to the same machine. Adjust the URL in `generate_qr.py` to your network IP if you want other devices on the network to access the simulation.
-4. Observe the displayed device information and alerts. Discuss with students what could happen on a real malicious site.
+## Docker
+```bash
+docker compose up --build
+```
+The database `events.db` is stored on a volume and the `public` folder is bind mounted for easy customization.
 
-## Educational Notes
-This simulation demonstrates risks of scanning untrusted QR codes:
-- Attackers could log your IP, browser details, and visit time.
-- Malicious pages might request camera or other sensitive permissions.
-- Even simple alerts can be used to social-engineer users into granting access.
+## Printing a QR Code
+Generate a PNG that links to `PUBLIC_URL` (defaults to `http://localhost:3000`):
+```bash
+curl "http://localhost:3000/qr" -o qr.png
+```
+Adjust the `text` and `size` query parameters for custom codes.
 
-No information is stored or transmitted in this demo. Use it to promote safe QR code practices in a classroom setting.
+## Files
+- `server.js` – Express application
+- `public/index.html` – landing page with delayed alarm
+- `public/admin.html` – live admin dashboard
+- `public/siren.mp3` – placeholder audio file
+- `docker-compose.yml`, `Dockerfile` – container setup
 
 ## Disclaimer
-This tool is for educational purposes only. It does not capture or transmit any real data.
+This demo is for educational use only. Replace `public/siren.mp3` with a real siren sound for full effect.
